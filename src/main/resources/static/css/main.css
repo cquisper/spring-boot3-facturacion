@@ -1,0 +1,16 @@
+html{
+    position: relative;
+}
+
+body{
+    background-color: #181A1B;
+}
+
+html, body {
+    height: 100%;
+    min-height: 100%;
+}
+
+.footer{
+    color: #9E9689;
+}

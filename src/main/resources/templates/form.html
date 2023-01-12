@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/header :: head}"></head>
+<body>
+<header th:replace="~{layout/header :: header}"></header>
+<div class="container-md wrap">
+    <h3 th:text="${titulo}" style="color: #D1CDC7"></h3>
+    <form th:action="@{/clientes/form}" th:object="${cliente}" th:method="post" enctype="multipart/form-data" style="color: #D1CDC7">
+        <div class="row mb-2">
+            <label for="nombre" class="col-form-label col-sm-2">Nombre</label>
+            <div class=col-sm-4>
+                <input type="text" id="nombre" th:field="*{nombre}" class="form-control text-bg-dark">
+            </div>
+        </div>
+        <div class="alert alert-warning" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"
+             role="alert"></div>
+        <div class="row mb-2">
+            <label for="apellido" class="col-form-label col-sm-2">Apellido</label>
+            <div class=col-sm-4>
+                <input type="text" id="apellido" th:field="*{apellido}" class="form-control text-bg-dark">
+            </div>
+        </div>
+        <div class="alert alert-warning" th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"
+             role="alert"></div>
+        <div class="row mb-2">
+            <label for="email" class="col-form-label col-sm-2">Email</label>
+            <div class="col-sm-4">
+                <input type="email" id="email" th:field="*{email}" class="form-control text-bg-dark">
+            </div>
+            <div class="alert alert-warning" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                 role="alert"></div>
+        </div>
+        <div class="row mb-2">
+            <label for="imagen" class="col-form-label col-sm-2">Imagen</label>
+            <div class="col-sm-4">
+                <input type="file" name="foto" id="imagen" class="form-control text-bg-dark">
+            </div>
+        </div>
+        <div class="row mb-2">
+            <label for="fecha_registro" class="col-form-label col-sm-2">Fecha Registro</label>
+            <div class="col-sm-4">
+                <input type="date" id="fecha_registro" th:field="*{createAt}" class="form-control text-bg-dark">
+            </div>
+            <div class="alert alert-warning" th:if="${#fields.hasErrors('createAt')}" th:errors="*{createAt}"
+                 role="alert"></div>
+        </div>
+        <div class="row mb-2" style="color: white;">
+            <div>
+                <a class="btn btn-secondary" th:href="@{/clientes/listar}">Regresar</a>
+                <input class="btn btn-primary" type="submit" th:value="${cliente.id > 0 ? 'Editar' : 'Crear'}">
+            </div>
+        </div>
+        <!--          <input type="hidden" th:field="*{id}"> con el sessionAtributes ya no es necesario-->
+    </form>
+</div>
+<footer th:replace="~{layout/header :: footer}"></footer>
+</body>
+</html>

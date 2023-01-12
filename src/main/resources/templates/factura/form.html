@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/header :: head}"></head>
+<body>
+<header th:replace="~{layout/header :: header}"></header>
+<div class="container-md wrap">
+    <div class="card text-bg-dark mb-3">
+        <div class="card-header text-center fw-bold text-muted">Formulario</div>
+        <div class="card-body">
+            <h5 th:text="${titulo}" style="color: #D1CDC7" class="card-title">Dark card title</h5>
+            <form id="form" th:action="@{/factura/form}" th:object="${factura}" th:method="post" style="color: #D1CDC7">
+                <div class="row mb-2">
+                    <div class="col">
+                        <p class="text-muted fs-5 fw-bold"> [['Cliente: ' + ${factura.cliente.nombre} + ' ' + ${factura.cliente.apellido}]]</p>
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    <label for="descripcion" class="col-form-label col-sm-2">Descripción</label>
+                    <div class=col>
+                        <input type="text" id="descripcion" th:field="*{descripcion}" class="form-control">
+                    </div>
+                </div>
+                <div class="alert alert-warning" th:errorclass="'form-control is-invalid'"
+                     th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"
+                     role="alert"></div>
+
+                <div class="row mb-2">
+                    <label for="observacion" class="col-form-label col-sm-2">Observación</label>
+                    <div class=col>
+                        <textarea type="text" id="observacion" th:field="*{observacion}" class="form-control"></textarea>
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    <label for="buscar_producto" class="col-form-label col-sm-2">Buscar producto</label>
+                    <div class=col>
+                        <input type="text" id="buscar_producto" name="buscar_producto" class="form-control">
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col">
+                        <table th:replace="~{factura/items :: itemsFactura}"></table>
+                        <table id="cargarItemProductos" class="table table-sm">
+                            <thead class="text-white">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Cantidad</th>
+                                <th>Total</th>
+                                <th>Eliminar</th>
+                            </tr>
+                            </thead>
+                            <tbody class="text-white">
+                            </tbody>
+                        </table>
+                        <h5>
+                            Monto Total S/ <span class="badge rounded-pill text-bg-secondary" id="gran_total">0</span>
+                        </h5>
+                    </div>
+                </div>
+
+                <div class="row mb-2" style="color: white;">
+                    <div>
+                        <a class="btn btn-secondary" th:href="@{/clientes/ver/{id}(id = ${factura.cliente.id})}">Regresar</a>
+                        <input class="btn btn-primary" type="submit" th:value="${titulo}">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{layout/header :: footer}"></footer>
+<script th:src="@{/js/autocomplete-producto.js}"></script>
+</body>
+</html>

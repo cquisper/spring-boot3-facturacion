@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{layout/header :: head}"></head>
+<body>
+<header th:replace="~{layout/header :: header}"></header>
+<div class="container mb-3">
+    <div class="row">
+        <div class="col">
+            <a class="btn btn-info text-white" sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{text.cliente.ahadir}"
+               th:href="@{/clientes/form}">Añadir cliente nuevo</a>
+        </div>
+    </div>
+</div>
+<div class="container wrap">
+    <h2 class="text-primary" th:text="${titulo}"></h2>
+    <table class="table">
+        <caption>
+            <a th:href="@{/clientes/listar(format=csv)}" class="btn btn-sm float-end btn-outline-light" target="_blank">CSV(.csv)</a>
+            <a th:href="@{/clientes/listar(format=xml)}" class="btn btn-sm float-end btn-outline-primary mx-1" target="_blank">XML(.xml)</a>
+            <a th:href="@{/clientes/listar(format=json)}" class="btn btn-sm float-end btn-outline-warning mx-1" target="_blank">JSON(.json)</a>
+        </caption>
+        <thead class="table-dark text-white">
+        <tr class="align-self-center">
+            <th sec:authorize="hasAnyRole('ROLE_USER')">Perfil</th>
+            <th th:text="#{text.cliente.nombre}">Nombre</th>
+            <th th:text="#{text.cliente.apellido}">Apellido</th>
+            <th th:text="#{text.cliente.email}">Email</th>
+            <th th:text="#{text.cliente.fecha}">Fecha</th>
+            <th sec:authorize="hasAnyRole('ROLE_ADMIN')">Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="cliente : ${clientes}" class="text-white align-self-center">
+            <td sec:authorize="hasAnyRole('ROLE_USER')">
+                <a th:href="@{/clientes/ver/{id}(id = ${cliente.id})}">
+                    <img th:if="${!#strings.isEmpty(cliente.imagen)}" th:src="@{'/uploads/' + ${cliente.imagen}}" style="max-width: 45px">
+                    <img th:if="${#strings.isEmpty(cliente.imagen)}" th:src="@{/image/not-user.png}" style="max-width: 45px">
+                </a>
+            </td>
+            <td th:text="${cliente.nombre}"></td>
+            <td th:text="${cliente.apellido}"></td>
+            <td th:text="${cliente.email}"></td>
+            <td th:text="${#temporals.format(cliente.createAt, 'dd/MM/yyyy')}"></td>
+            <td sec:authorize="hasAnyRole('ROLE_ADMIN')">
+                <a class="btn btn-sm btn-primary me-1" th:href="@{/factura/form/{id}(id = ${cliente.id})}" th:text="#{text.factura.crear}">
+                    Crear Factura
+                </a>
+                <a class="btn btn-sm btn-success me-1" th:href="@{/clientes/form/} + ${cliente.id}" th:text="#{text.cliente.editar}">Editar</a>
+
+                <a class="btn btn-sm btn-danger" onclick="return confirm('¿Esta seguro de eliminar?')"
+                   th:href="@{/clientes/eliminar/} + ${cliente.id}" th:text="#{text.cliente.eliminar}">Eliminar</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<footer th:replace="~{layout/header :: footer}"></footer>
+</body>
+</html>

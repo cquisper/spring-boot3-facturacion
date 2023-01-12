@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <title th:text="${titulo}"></title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" th:href="@{/css/jquery-ui.min.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header class="mb-3 text-bg-dark" th:fragment="header">
+    <div class="container p-2">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a th:href="@{/clientes/listar}"
+               class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                <img th:src="@{/image/spring-logo.png}" alt="logo_spring" style="max-width: 50px"/>
+            </a>
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li><a th:href="@{/clientes/listar}" th:text="#{text.cliente.ver}" style="color: #9E9689;" class="nav-link px-2 text-secondary">
+                    Ver clientes
+                </a>
+                </li>
+                <li sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a th:href="@{/clientes/form}" th:text="#{text.cliente.crear}" class="nav-link px-2 text-white">Crear Cliente</a>
+                </li>
+            </ul>
+            <form class="col-12 col-lg-auto mb-3 justify-content-center mb-lg-0 me-lg-3" role="search">
+                <input type="search" class="form-control form-control-dark text-bg-dark text-white-50"
+                       placeholder="Buscar cliente..."
+                       aria-label="Search">
+            </form>
+            <ul class="nav ms-auto justify-content-center mb-2 mb-lg-0">
+                <div class="ps-2 d-block pe-2" style="max-width: 50px" sec:authorize="authenticated">
+                    <img th:if="${usuarioSecurity != null and usuarioSecurity.avatar != null}" class="rounded rounded-circle"
+                         th:src="'/uploads/' + ${usuarioSecurity.avatar}" style="max-width: 50px">
+                </div>
+                <li sec:authorize="!isAuthenticated()"><a th:href="@{/login}" style="color: #9E9689;"
+                       class="nav-link px-2 text-secondary">Iniciar Sesión</a></li>
+                <li sec:authorize="!isAuthenticated()"><a th:href="@{/registro/form}" style="color: #9E9689;"
+                                                          class="nav-link px-2 text-secondary">Registrarse</a></li>
+                <li sec:authorize="isAuthenticated()" class="nav-item dropdown align-self-center">
+                    <a class="nav-link dropdown-toggle align-self-center" href="#" id="navbarDarkDropdownMenuLink" style="color: #9E9689;"
+                       role="button" data-bs-toggle="dropdown" aria-expanded="false" sec:authentication="name">
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                        <li>
+                            <form th:action="@{/logout}" id="logoutForm" method="post">
+                                <button class="dropdown-item" type="submit">Cerrar Sesión</button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown align-self-center">
+                    <a class="nav-link dropdown-toggle align-self-center" href="#" id="navbarDarkDropdownMenuLenguage" style="color: #9E9689;"
+                       role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="#{text.cliente.idioma}">
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLenguage">
+                        <li><a th:href="@{/locale(lang=es_ES)}" style="color: #9E9689;" class="nav-link px-2 text-secondary">Español</a></li>
+                        <li><a th:href="@{/locale(lang=en_US)}" style="color: #9E9689;" class="nav-link px-2 text-secondary">Inglés</a></li>
+                        <li><a th:href="@{/locale(lang=de_DE)}" style="color: #9E9689;" class="nav-link px-2 text-secondary">Alemán</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="alert alert-success" th:text="${success}" th:if="${success != null}"></div>
+    <div class="alert alert-warning" th:text="${warning}" th:if="${warning != null}"></div>
+    <div class="alert alert-info" th:text="${info}" th:if="${info != null}"></div>
+    <div class="alert alert-danger" th:text="${error}" th:if="${error != null}"></div>
+</header>
+<div class="container" th:fragment="footer">
+    <footer class="py-3 my-4 footer text-muted">
+        <p sec:authorize="isAuthenticated()">
+            <span th:text="#{text.usuario.conectado}"></span>: <span sec:authentication="name"></span> | <span th:text="#{text.usuario.rol}"></span>: <span
+                sec:authentication="principal.authorities"></span>
+        </p>
+        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+            <li class="nav-item"><a th:href="@{/clientes/listar}" class="nav-link px-2 text-muted" th:text="#{text.cliente.ver}">Ver clientes</a></li>
+            <li sec:authorize="hasAnyRole('ROLE_ADMIN')" class="nav-item">
+                <a th:href="@{/clientes/form}" class="nav-link px-2 text-muted" th:text="#{text.cliente.crear}">Crear Cliente</a>
+            </li>
+        </ul>
+        <p class="text-center text-muted" th:text="#{text.app.desarrollo}">© 2022 Desarrollado por QRCristhian</p>
+    </footer>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script th:src="@{/js/jquery-ui.min.js}"></script>
+</div>
+</body>
+</html>

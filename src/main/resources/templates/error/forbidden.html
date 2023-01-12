@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/header :: head}"></head>
+<body>
+<header th:replace="~{layout/header :: header}"></header>
+<div class="container-md wrap">
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">Acceso denegado!</h4>
+        <p>
+            <span th:text="${#authentication.authenticated ? #authentication.name + ', lo ' : 'Lo '}"></span>
+            sentimos no tienes permisos para acceder a este recurso.
+            <hr>
+            <a th:href="@{/clientes/home}" class="btn btn-outline-danger" role="button">Inicio</a>
+        </p>
+    </div>
+    <div class="text-center">
+        <img th:src="@{/image/denegado.png}" class="img-fluid" style="max-width: 30%">
+    </div>
+</div>
+<footer th:replace="~{layout/header :: footer}"></footer>
+</body>
+</html>

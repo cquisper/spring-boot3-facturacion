@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{layout/header :: head}"></head>
+<body>
+	<header th:replace="~{layout/header :: header}"></header>
+	<div class="container py-4 wrap">
+		<div class="card text-bg-dark">
+			<div class="card-header text-center text-muted fw-bold" th:text="${titulo}"></div>
+			<div class="card-body">
+				<div class="row mb-3">
+					<div class="col-md" th:if="${#strings.length(cliente.imagen) > 0}" sec:authorize="authenticated">
+						<img class="img-thumbnail rounded float-left" th:src="@{'/uploads/' + ${cliente.imagen}}"
+							 th:alt="${cliente.imagen}"/>
+					</div>
+					<div class="col-md">
+						<ul class="list-group bg-black">
+							<li class="list-group-item active" th:text="${cliente.nombre}"></li>
+							<li class="list-group-item" th:text="${cliente.apellido}"></li>
+							<li class="list-group-item" th:text="${cliente.email}"></li>
+							<li class="list-group-item" th:text="${#temporals.format(cliente.createAt, 'dd/MM/YYY')}"></li>
+						</ul>
+					</div>
+				</div>
+				<div class="row" sec:authorize="hasAnyRole('ROLE_ADMIN')">
+					<div class="col">
+						<a class="btn btn-sm btn-primary" th:href="@{/factura/form/{id}(id = ${cliente.id})}">Crear nueva factura</a>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="alert alert-info my-4" th:if="${#lists.isEmpty(cliente.facturas)}">
+							[['No hay facturas asignadas para el cliente ' + ${cliente.nombre} + ' ' + ${cliente.apellido}]]
+						</div>
+						<table th:if="${not #lists.isEmpty(cliente.facturas)}" class="table table-bordered my-4 text-white">
+							<thead class="table-dark text-white">
+							<tr>
+								<th>Folio</th>
+								<th>Descripción</th>
+								<th>Fecha</th>
+								<th>Total</th>
+								<th sec:authorize="hasAnyRole('ROLE_ADMIN')">Acciones</th>
+							</tr>
+							</thead>
+							<tbody class="text-white">
+							<tr th:each="factura : ${cliente.facturas}">
+								<td th:text="${factura.id}"></td>
+								<td th:text="${factura.descripcion}"></td>
+								<td th:text='${#temporals.format(factura.createAt, formatDateComplete)}'></td>
+								<td th:text="${'S/ '+ #numbers.formatDecimal(factura.total, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+								<td sec:authorize="hasAnyRole('ROLE_ADMIN')">
+									<a th:href="@{/factura/ver/{id}(id = ${factura.id})}" class="btn btn-info btn-sm">Ver detalle</a>
+									<a th:href="@{/factura/eliminar/{id}(id = ${factura.id})}"
+									   onclick="return confirm('Estas seguro de eliminar la factura?')" class="btn btn-danger btn-sm">Eliminar</a>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<footer th:replace="~{layout/header :: footer}"></footer>
+</body>
+</html>
